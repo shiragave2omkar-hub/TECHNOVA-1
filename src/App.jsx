@@ -18,10 +18,10 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-[#f5f5f3] text-gray-900">
+    <div className="app-shell flex h-screen flex-col bg-[#f5f5f3] text-gray-900">
       <Navbar activeTab={activeTab} user={currentUser} />
 
-      <main className="flex-1 overflow-hidden pb-24 pt-[5.25rem]">
+      <main className="flex-1 overflow-hidden px-0 pb-24 pt-[var(--app-header-height)]">
         <div className="mx-auto flex h-full w-full max-w-lg flex-col overflow-hidden">
           <div key={activeTab} className="page-transition flex-1 overflow-y-auto">
             {activeTab === "explore" && <ExplorePage onCheckEligibility={handleCheckEligibility} />}
@@ -33,7 +33,7 @@ export default function App() {
               />
             )}
             {activeTab === "assistant" && <ChatPage currentUser={currentUser} />}
-            {activeTab === "profile" && <ProfilePage user={currentUser} />}
+            {activeTab === "profile" && <ProfilePage user={currentUser} onUserUpdate={setCurrentUser} />}
           </div>
         </div>
       </main>

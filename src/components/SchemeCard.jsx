@@ -7,9 +7,22 @@ const categoryStyles = {
   "Assistive Devices": "bg-violet-50 text-violet-700",
 }
 
+const categoryAccentStyles = {
+  Education: "border-l-[#185FA5]",
+  Health: "border-l-[#0F6E56]",
+  Employment: "border-l-[#854F0B]",
+  Travel: "border-l-[#4F46E5]",
+  "Financial Support": "border-l-[#0F6E56]",
+  "Assistive Devices": "border-l-[#6D28D9]",
+}
+
 export default function SchemeCard({ scheme }) {
   return (
-    <article className="rounded-3xl border border-gray-200 bg-white p-5 shadow-[0_12px_32px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(15,23,42,0.08)]">
+    <article
+      className={`rounded-3xl border border-gray-200 border-l-4 bg-white p-5 shadow-[0_12px_32px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(15,23,42,0.08)] ${
+        categoryAccentStyles[scheme.category] || "border-l-gray-300"
+      }`}
+    >
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <span

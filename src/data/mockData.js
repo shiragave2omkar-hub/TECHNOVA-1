@@ -73,6 +73,7 @@ export const eligibleSchemes = [
     id: 101,
     name: "Higher Education Scholarship for Students with Disabilities",
     category: "Education",
+    incomePriority: "EWS",
     whyEligibleItems: [
       { label: "Meets disability criteria", met: true },
       { label: "Income eligible", met: true },
@@ -85,6 +86,7 @@ export const eligibleSchemes = [
     id: 102,
     name: "Accessible Health Support Card",
     category: "Health",
+    incomePriority: "Low Income",
     whyEligibleItems: [
       { label: "Meets disability criteria", met: true },
       { label: "Income eligible", met: true },
@@ -109,6 +111,7 @@ export const eligibleSchemes = [
     id: 104,
     name: "Post-Secondary Learning Device Grant",
     category: "Education",
+    incomePriority: "EWS",
     whyEligibleItems: [
       { label: "Meets disability criteria", met: true },
       { label: "Income eligible", met: true },
@@ -126,6 +129,10 @@ export const mockUser = {
   disabilityType: "Locomotor Disability",
   disabilityPercentage: "62%",
   incomeCategory: "EWS",
+  incomeStatus: "not_uploaded",
+  incomeAmount: null,
+  income_verified: false,
+  income_amount: 0,
 }
 
 export const udidProfiles = [
@@ -137,6 +144,10 @@ export const udidProfiles = [
     disabilityType: "Visual Impairment",
     disabilityPercentage: "48%",
     incomeCategory: "Low Income",
+    incomeStatus: "flagged",
+    incomeAmount: 320000,
+    income_verified: false,
+    income_amount: 320000,
   },
   {
     udid: "UDID-KA-2025-0087",
@@ -145,6 +156,10 @@ export const udidProfiles = [
     disabilityType: "Hearing Impairment",
     disabilityPercentage: "55%",
     incomeCategory: "EWS",
+    incomeStatus: "verified",
+    incomeAmount: 180000,
+    income_verified: true,
+    income_amount: 180000,
   },
 ]
 

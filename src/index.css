@@ -5,6 +5,11 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --app-header-height: 4.5rem;
+    --color-background-secondary: #f8faf8;
+  }
+
   html,
   body,
   #root {

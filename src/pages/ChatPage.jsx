@@ -4,7 +4,8 @@ import ChatBubble from "../components/ChatBubble"
 const suggestions = [
   "Check my eligibility",
   "What documents do I need?",
-  "Show scholarships",
+  "Show similar schemes",
+  "Track my application",
 ]
 
 export default function ChatPage({ currentUser }) {
@@ -42,7 +43,7 @@ export default function ChatPage({ currentUser }) {
   }
 
   return (
-    <section className="flex h-full flex-col overflow-hidden px-4 pb-4 pt-4">
+    <section className="flex h-full flex-col overflow-hidden px-4 pb-4 pt-3">
       <div className="rounded-[28px] border border-gray-200 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">AI Assistant</p>
         <h2 className="mt-2 text-2xl font-semibold tracking-tight text-gray-900">Ask for scheme guidance</h2>
@@ -88,12 +89,12 @@ export default function ChatPage({ currentUser }) {
             <div ref={bottomRef} />
           </div>
 
-          <div className="scrollbar-hide flex gap-2 overflow-x-auto px-4 pb-3">
+          <div className="scrollbar-hide grid grid-cols-2 gap-2 overflow-x-auto overflow-visible px-4 pb-3">
             {suggestions.map((suggestion) => (
               <button
                 key={suggestion}
                 onClick={() => sendMessage(suggestion)}
-                className="shrink-0 rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:bg-gray-100"
+                className="w-full rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:bg-gray-100"
               >
                 {suggestion}
               </button>

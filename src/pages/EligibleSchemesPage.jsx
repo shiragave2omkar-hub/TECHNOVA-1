@@ -7,23 +7,44 @@ const statusStyles = {
   "Partially Eligible": "bg-sky-50 text-sky-700",
 }
 
+const categoryAccentStyles = {
+  Education: "border-l-[#185FA5]",
+  Health: "border-l-[#0F6E56]",
+  Employment: "border-l-[#854F0B]",
+  Travel: "border-l-[#4F46E5]",
+  "Financial Support": "border-l-[#0F6E56]",
+  "Assistive Devices": "border-l-[#6D28D9]",
+}
+
 export default function EligibleSchemesPage({ currentUser, highlightedSchemeId, onUserLoaded }) {
   const [activeFilter, setActiveFilter] = useState("All")
   const [udidInput, setUdidInput] = useState("")
   const [searchState, setSearchState] = useState("idle")
   const [searchMessage, setSearchMessage] = useState("")
   const cardRefs = useRef({})
+  const hasVerifiedEwsIncome = currentUser.incomeStatus === "verified" && currentUser.incomeCategory === "EWS"
 
   const filteredSchemes = useMemo(() => {
-    if (activeFilter === "All") return eligibleSchemes
+    let matchingSchemes = eligibleSchemes
+
     if (activeFilter === "Ready to Apply") {
-      return eligibleSchemes.filter((scheme) => scheme.status === "Ready to Apply")
+      matchingSchemes = eligibleSchemes.filter((scheme) => scheme.status === "Ready to Apply")
+    } else if (activeFilter === "Missing Documents") {
+      matchingSchemes = eligibleSchemes.filter((scheme) => scheme.status === "Missing Documents")
+    } else if (activeFilter !== "All") {
+      matchingSchemes = eligibleSchemes.filter((scheme) => scheme.category === activeFilter)
     }
-    if (activeFilter === "Missing Documents") {
-      return eligibleSchemes.filter((scheme) => scheme.status === "Missing Documents")
+
+    if (!hasVerifiedEwsIncome) {
+      return matchingSchemes
     }
-    return eligibleSchemes.filter((scheme) => scheme.category === activeFilter)
-  }, [activeFilter])
+
+    return [...matchingSchemes].sort((left, right) => {
+      const leftPriority = left.incomePriority === "EWS" ? 0 : 1
+      const rightPriority = right.incomePriority === "EWS" ? 0 : 1
+      return leftPriority - rightPriority
+    })
+  }, [activeFilter, hasVerifiedEwsIncome])
 
   useEffect(() => {
     if (!highlightedSchemeId) return
@@ -65,7 +86,7 @@ export default function EligibleSchemesPage({ currentUser, highlightedSchemeId, 
   }
 
   return (
-    <section className="px-4 pb-6 pt-4">
+    <section className="space-y-5 px-4 pb-6 pt-3">
       <div className="rounded-[28px] border border-gray-200 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -123,7 +144,7 @@ export default function EligibleSchemesPage({ currentUser, highlightedSchemeId, 
         </p>
       </div>
 
-      <div className="mt-5 scroll-mt-24 rounded-[28px] border border-gray-200 bg-white p-4 shadow-[0_12px_32px_rgba(15,23,42,0.05)]">
+      <div className="scroll-mt-24 rounded-[28px] border border-gray-200 border-l-4 border-l-[#185FA5] bg-[var(--color-background-secondary)] p-4 shadow-[0_12px_32px_rgba(15,23,42,0.05)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">Loaded Profile</p>
         <div className="mt-3 grid grid-cols-2 gap-3">
           <ProfileFact label="Name" value={currentUser.name} />
@@ -133,7 +154,7 @@ export default function EligibleSchemesPage({ currentUser, highlightedSchemeId, 
         </div>
       </div>
 
-      <div className="scrollbar-hide mt-5 flex gap-2 overflow-x-auto pb-1">
+      <div className="scrollbar-hide flex flex-wrap gap-2 overflow-x-auto overflow-visible pb-1">
         {eligibleFilters.map((filter) => {
           const isActive = filter === activeFilter
           return (
@@ -152,16 +173,16 @@ export default function EligibleSchemesPage({ currentUser, highlightedSchemeId, 
         })}
       </div>
 
-      <div className="mt-5 space-y-4">
+      <div className="space-y-4">
         {filteredSchemes.map((scheme) => (
           <article
             key={scheme.id}
             ref={(node) => {
               cardRefs.current[scheme.id] = node
             }}
-            className={`scroll-mt-24 rounded-3xl border bg-white p-5 shadow-[0_12px_32px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(15,23,42,0.08)] ${
+            className={`scroll-mt-24 rounded-3xl border border-l-4 bg-white p-5 shadow-[0_12px_32px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(15,23,42,0.08)] ${
               highlightedSchemeId === scheme.id ? "border-gray-900 ring-1 ring-gray-900/10" : "border-gray-200"
-            }`}
+            } ${categoryAccentStyles[scheme.category] || "border-l-gray-300"}`}
           >
             <div className="flex items-start justify-between gap-3">
               <div>
