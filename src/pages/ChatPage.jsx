@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import AccessibilityControls from "../components/AccessibilityControls"
 import ChatBubble from "../components/ChatBubble"
 
 const suggestions = [
@@ -7,7 +8,7 @@ const suggestions = [
   "Show scholarships",
 ]
 
-export default function ChatPage({ currentUser }) {
+export default function ChatPage({ currentUser, language = "en-IN", onVoiceCommand }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [isTyping, setIsTyping] = useState(false)
@@ -41,13 +42,31 @@ export default function ChatPage({ currentUser }) {
     }
   }
 
+  const autoReadText = [
+    "Selected AI Assistant tab.",
+    "AI Assistant page.",
+    "Ask for help with scheme eligibility, required documents, scholarships, health support, or next steps.",
+    "Use Read Page to hear the current chat and suggested prompts.",
+  ].join(" ")
+  const pageText = [
+    "AI Assistant page. Ask for scheme guidance.",
+    `Current profile context: ${currentUser.name}, ${currentUser.state}, ${currentUser.disabilityType}, income category ${currentUser.incomeCategory}.`,
+    messages.length === 0
+      ? "No chat messages yet. Start with your situation."
+      : `Current chat: ${messages
+          .map((message) => `${message.role === "user" ? "You" : "Assistant"} said: ${message.text}`)
+          .join(" ")}`,
+    `Suggested prompts: ${suggestions.join(", ")}.`,
+    "Action available: type a question, choose a suggestion, or use Voice Command for navigation and reading.",
+  ].join(" ")
+
   return (
-    <section className="flex h-full flex-col overflow-hidden px-4 pb-4 pt-4">
+    <section className="flex h-full flex-col overflow-hidden px-4 pb-48 pt-4">
       <div className="rounded-[28px] border border-gray-200 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">AI Assistant</p>
         <h2 className="mt-2 text-2xl font-semibold tracking-tight text-gray-900">Ask for scheme guidance</h2>
         <p className="mt-2 text-sm leading-6 text-gray-600">
-          Tell me about your situation and I’ll help you find the right schemes
+          Tell me about your situation and I'll help you find the right schemes
         </p>
       </div>
 
@@ -62,7 +81,7 @@ export default function ChatPage({ currentUser }) {
                   </div>
                   <h3 className="mt-4 text-lg font-semibold text-gray-900">Start with your situation</h3>
                   <p className="mt-2 text-sm leading-6 text-gray-600">
-                    Tell me about your situation and I’ll guide you step by step.
+                    Tell me about your situation and I'll guide you step by step.
                   </p>
                 </div>
               </div>
@@ -92,7 +111,9 @@ export default function ChatPage({ currentUser }) {
             {suggestions.map((suggestion) => (
               <button
                 key={suggestion}
+                type="button"
                 onClick={() => sendMessage(suggestion)}
+                aria-label={`Ask assistant: ${suggestion}`}
                 className="shrink-0 rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:bg-gray-100"
               >
                 {suggestion}
@@ -108,11 +129,14 @@ export default function ChatPage({ currentUser }) {
                 onChange={(event) => setInput(event.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about eligibility, documents, or support schemes"
+                aria-label="Ask about eligibility, documents, or support schemes"
                 className="flex-1 bg-transparent text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none"
               />
               <button
+                type="button"
                 onClick={() => sendMessage()}
                 disabled={!input.trim()}
+                aria-label="Send message to assistant"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
@@ -123,6 +147,13 @@ export default function ChatPage({ currentUser }) {
           </div>
         </div>
       </div>
+
+      <AccessibilityControls
+        autoReadText={autoReadText}
+        language={language}
+        onVoiceCommand={onVoiceCommand}
+        pageText={pageText}
+      />
     </section>
   )
 }
@@ -146,5 +177,5 @@ function getAutoReply(message, currentUser) {
     return "You appear to fit health-support schemes that cover treatment, rehabilitation, and recurring care costs. If you confirm whether you need recurring therapy or hospital support, I can narrow this to the most actionable option."
   }
 
-  return `I can guide you using ${currentUser.state}, ${currentUser.disabilityType}, and your current income category. Tell me what you need most and I’ll turn that into the next best step.`
+  return `I can guide you using ${currentUser.state}, ${currentUser.disabilityType}, and your current income category. Tell me what you need most and I'll turn that into the next best step.`
 }

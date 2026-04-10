@@ -1,3 +1,4 @@
+import AccessibilityControls from "../components/AccessibilityControls"
 import ProfileCard from "../components/ProfileCard"
 import { recentActivity } from "../data/mockData"
 
@@ -23,9 +24,30 @@ const activityIcons = {
   ),
 }
 
-export default function ProfilePage({ user }) {
+export default function ProfilePage({ user, language = "en-IN", onVoiceCommand }) {
+  const autoReadText = [
+    "Selected Profile tab.",
+    "Profile page.",
+    `Profile open for ${user.name}.`,
+    "Available details include UDID, state, disability type, disability percentage, income category, and recent activity.",
+    "Use Read Page for the full profile reading.",
+  ].join(" ")
+  const pageText = [
+    "Profile page.",
+    `Name: ${user.name}.`,
+    `U D I D: ${user.udid}.`,
+    `State: ${user.state}.`,
+    `Disability type: ${user.disabilityType}.`,
+    `Disability percentage: ${user.disabilityPercentage}.`,
+    `Income category: ${user.incomeCategory}.`,
+    "Profile verification status: Verified.",
+    `Recent activity: ${recentActivity
+      .map((item, index) => `Activity ${index + 1}: ${item.title}. ${item.detail}. Time: ${item.time}.`)
+      .join(" ")}`,
+  ].join(" ")
+
   return (
-    <section className="space-y-5 px-4 pb-6 pt-4">
+    <section className="space-y-5 px-4 pb-48 pt-4">
       <ProfileCard user={user} />
 
       <div className="rounded-[28px] border border-gray-200 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
@@ -51,6 +73,13 @@ export default function ProfilePage({ user }) {
           ))}
         </div>
       </div>
+
+      <AccessibilityControls
+        autoReadText={autoReadText}
+        language={language}
+        onVoiceCommand={onVoiceCommand}
+        pageText={pageText}
+      />
     </section>
   )
 }

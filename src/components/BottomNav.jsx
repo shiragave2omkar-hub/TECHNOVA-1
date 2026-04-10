@@ -51,7 +51,10 @@ export default function BottomNav({ activeTab, setActiveTab }) {
           return (
             <button
               key={tab.id}
+              type="button"
               onClick={() => setActiveTab(tab.id)}
+              aria-current={isActive ? "page" : undefined}
+              aria-label={`Open ${tab.label}`}
               className={`flex flex-col items-center justify-center rounded-2xl px-2 py-2 text-center transition-all duration-200 ${
                 isActive
                   ? "bg-gray-900 text-white shadow-[0_10px_24px_rgba(17,24,39,0.16)]"
